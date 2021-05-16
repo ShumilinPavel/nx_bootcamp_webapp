@@ -1,0 +1,7 @@
+public/
+scripts/
+.gitignore
+.gitmodules
+LICENSE
+README.md
+Dockerfile
