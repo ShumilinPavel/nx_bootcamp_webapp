@@ -1,13 +1,16 @@
-FROM ubuntu:18.04 AS builder
-RUN apt-get update && apt-get install -y wget
-WORKDIR ./app
-RUN wget -O hugo.deb https://github.com/gohugoio/hugo/releases/download/v0.83.1/hugo_extended_0.83.1_Linux-64bit.deb && \
-    apt install ./hugo.deb && \
-    rm hugo.deb
-COPY . .
-RUN hugo
+FROM alpine:3.13 AS builder
 
-FROM nginx
-RUN rm -rf /usr/share/nginx/html/*
-COPY --from=builder /app/public /usr/share/nginx/html
+WORKDIR ./app
+RUN wget -O hugo.tar.gz https://github.com/gohugoio/hugo/releases/download/v0.83.1/hugo_0.83.1_Linux-64bit.tar.gz && \
+    tar xf hugo.tar.gz
+COPY . .
+RUN ./hugo
+
+FROM nginx:1.20-alpine
+
+COPY default.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder /app/public /www
+
+EXPOSE 80
+
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
