@@ -1,10 +1,12 @@
 pipeline {
     agent any
-    
     options {
         skipDefaultCheckout()
     }
-    
+    environment {
+        TOKEN = credentials('telegramToken')
+        CHAT_ID = credentials('telegramChatId')
+    }
     stages {
         stage('Build') {
             steps {
@@ -12,11 +14,15 @@ pipeline {
                 sh './scripts/build.sh'
             }
         }
-        
         stage('Deploy') {
             steps {
                 sh './scripts/run.sh'
             }
+        }
+    }
+    post {
+        always {
+            sh "curl -s -X POST https://api.telegram.org/bot${TOKEN}/sendMessage -d chat_id=${CHAT_ID} -d text=\"Jenkins job: ${JOB_NAME}\nBuild status is ${currentBuild.currentResult}\nSee ${BUILD_URL}\""
         }
     }
 }
