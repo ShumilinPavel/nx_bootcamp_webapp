@@ -19,6 +19,11 @@ pipeline {
                 sh './scripts/run.sh'
             }
         }
+        stage('Test') {
+            steps {
+                sh 'curl -fsS -o /dev/null localhost || echo -1'
+            }
+        }
     }
     post {
         always {
