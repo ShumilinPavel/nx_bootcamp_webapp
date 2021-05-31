@@ -1,3 +1,4 @@
 #!/bin/bash
 
-docker run -d -p 80:80 nx_bootcamp_webapp
+docker stop webapp
+docker run -d --rm --name webapp -p 80:80 nx_bootcamp_webapp
