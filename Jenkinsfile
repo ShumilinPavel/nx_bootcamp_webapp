@@ -27,7 +27,7 @@ pipeline {
     }
     post {
         always {
-            sh 'curl -s -X POST https://api.telegram.org/bot$TOKEN/sendMessage -d chat_id=$CHAT_ID -d text="Jenkins job: ${JOB_NAME}\nBuild status is ${currentBuild.currentResult}\nSee ${BUILD_URL}"'
+            sh "curl -s -X POST https://api.telegram.org/bot\$TOKEN/sendMessage -d chat_id=\$CHAT_ID -d text=\"Jenkins job: ${JOB_NAME}\nBuild status is ${currentBuild.currentResult}\nSee ${BUILD_URL}\""
         }
     }
 }
